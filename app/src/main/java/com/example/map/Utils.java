@@ -44,9 +44,11 @@ public class Utils
    * This also favors 2D mapview because it's more frequently, thus, more recently
    * updated.
    * Also checks if Google API client has access fine location permission.
+   * Returns GoogleApiClient.
   */
-  public static void intializeMapsActivity(MapsActivity a)
+  public static GoogleApiClient intializeMaps(MapsActivity a)
   {
+    GoogleApiClient retval;
     // Set maptype
     a.mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     // Ask for access of location from google play services
@@ -54,14 +56,26 @@ public class Utils
       if (ContextCompat.checkSelfPermission(a,
           Manifest.permission.ACCESS_FINE_LOCATION)
           == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
+                retval = buildGoogleApiClient(a);
+                // Reveals my location
                 a.mMap.setMyLocationEnabled(true);
        }
     }
     else {
-            buildGoogleApiClient();
+            retval = buildGoogleApiClient(a);
+            // Reveals my location
             a.mMap.setMyLocationEnabled(true);
     }
+    return retval;
+  }
+  private static GoogleApiClient buildGoogleApiClient(MapsActivity a)
+  {
+    return new GoogleApiClient.Builder(a)
+      .addConnectionCallbacks(a)
+      .addOnConnectionFailedListener(a)
+      .addApi(LocationServices.API)
+      .build()
+      .connect();
   }
   /*
    * Check whether location permission is granted.
