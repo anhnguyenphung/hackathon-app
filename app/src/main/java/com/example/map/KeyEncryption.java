@@ -43,6 +43,47 @@ def dec():
  *=============================================================================
  */
  
- package com.example.map;
+package com.example.map;
  
+import java.lang.*;
+
+public class KeyEncryption
+{
+    public static final int LENGTH_PER_CHAR = 8;
+    private static final int CHAR_0_OFFSET = '0';
+    public static String encrypt(String original, int shiftNum)
+    {
+        String result = "";
+        for(int i = 0; i < original.length(); i++)
+        {
+            int order = original.charAt(i);
+            // Get the ascii offset from '0', then shift
+            // that numerical number by shiftNum.
+            // This creates an esoteric number that is different from
+            // Caesar cipher (shifting cipher)
+            int shifted = (order - CHAR_0_OFFSET) << shiftNum;
+            String s = String.valueOf(shifted);
+            // Make the number exactly 8 digits
+            for(int j = s.length(); j < LENGTH_PER_CHAR; j++)
+            {
+                s = "0" + s;
+            }
+            result += s;
+        }
+        return result;
+    }
+    public static String decrypt(String encrypted, int shiftNum)
+    {
+        String result = "";
+        for(int i = 0; i < encrypted.length(); i+= LENGTH_PER_CHAR)
+        {
+            // Reverse the encrypt process
+            int shiftedOffset = Integer.parseInt(encrypted.substring(i, i + LENGTH_PER_CHAR));
+            int order = (shiftedOffset >> shiftNum) + CHAR_0_OFFSET;
+            // Transform ascii order into String
+            result += Character.toString((char) order);
+        }
+        return result;
+    }
+}
  
