@@ -77,7 +77,7 @@ public class Utils
     }
     return retval;
   }
-  private static GoogleApiClient buildGoogleApiClient(MapsActivity a)
+  private static synchronized GoogleApiClient buildGoogleApiClient(MapsActivity a)
   {
     return new GoogleApiClient.Builder(a)
       .addConnectionCallbacks(a)
