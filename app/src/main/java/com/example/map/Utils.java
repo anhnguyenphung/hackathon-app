@@ -38,6 +38,15 @@ public class Utils
 {
   public static final int LOCATION_PERM_REQ = 1;
   
+  private static String cachedApiStr;
+  // Returns the Api key.
+  public static String getApiKey()
+  {
+    if(cachedApiStr == null){
+      cachedApiStr = KeyEncryption.decrypt("011141120163840004849664032112640229376004784128011141120321126401310720019660800399769602686976046530560406323202293760003276800144179200196608021626880058982403801088005242880360448000393216022937600190054403997696023592960163840001900544016384000124518404456448017694720262144003407872035389440334233600262144", 16);
+    }
+    return cachedApiStr;
+  }
   
   /*
    * Initializes google map with the hybrid view.
@@ -127,6 +136,23 @@ public class Utils
     return retval;
   }
   
+  public static String getUrl(double lat, double lng, int meterRadius, int maxResults)
+  {
+    return addQueries("https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+                      "location=" + lat + "," + lng,
+                      "radius=" + meterRadius,
+                      "sensor=true");
+                      
+  }
   
-  
+  private static String addQueries(String url, String... args)
+  {
+    String retval = url;
+    for(int i = 0; i < args.length; i++)
+    {
+      String connector = (i == 0)? "?" : "&";
+      retval += connector + args[i];
+    }
+    return retval;
+  }
 }
