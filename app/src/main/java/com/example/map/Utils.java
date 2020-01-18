@@ -156,4 +156,19 @@ public class Utils
     }
     return retval;
   }
+  
+  public static boolean pollLocationUpdate(MapsActivity a, int fastestIntervalSecs, int intervalSecs)
+  {
+    a.locationRequest = new LocationRequest();
+    a.locationRequest.setInterval(1000);
+    a.locationRequest.setFastestInterval(1000);
+    a.locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+    if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+      LocationServices.FusedLocationApi.requestLocationUpdates(a.gApiClient, a.locationRequest, a);
+      return true;
+    }
+    return false;
+  }
 }
