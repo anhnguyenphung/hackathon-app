@@ -66,7 +66,7 @@ public class Utils
     }
     return retval;
   }
-  private static GoogleApiClient buildGoogleApiClient(MapsActivity a)
+  private static synchronized GoogleApiClient buildGoogleApiClient(MapsActivity a)
   {
     GoogleApiClient retval = new Builder(a)
       .addConnectionCallbacks(a)
@@ -80,7 +80,7 @@ public class Utils
    * Check whether location permission is granted.
    * Returns if the location permission has already been granted.
    * Despite of whatever the function returns, after the function is called,
-   * there should be a sanity check whether LOCATION_PER_REQ is gotten by overriding
+   * there should be a sanity check whether LOCATION_PERM_REQ is gotten by overriding
    * onRequestPermissionsResult
    */
   public static boolean checkLocationPerm(MapsActivity a)
@@ -126,7 +126,7 @@ public class Utils
     return retval;
   }
   
-  public static String getUrl(double lat, double lng, int meterRadius, int maxResults)
+  public static String getUrl(double lat, double lng, int meterRadius)
   {
     return addQueries("https://maps.googleapis.com/maps/api/place/nearbysearch/json",
                       "location=" + lat + "," + lng,
@@ -144,5 +144,20 @@ public class Utils
       retval += connector + args[i];
     }
     return retval;
+  }
+  
+  public static boolean pollLocationUpdate(MapsActivity a, int fastestIntervalSecs, int intervalSecs)
+  {
+    a.locationRequest = new LocationRequest();
+    a.locationRequest.setInterval(1000);
+    a.locationRequest.setFastestInterval(1000);
+    a.locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+    if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+      LocationServices.FusedLocationApi.requestLocationUpdates(a.gApiClient, a.locationRequest, a);
+      return true;
+    }
+    return false;
   }
 }
