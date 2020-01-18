@@ -3,23 +3,24 @@ package com.example.map;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.location.LocationListener;
 import android.os.Bundle;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 // Callbacks, listeners
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.location.LocationListener;
     
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements 
+public abstract class MapsActivity extends FragmentActivity implements
     OnMapReadyCallback,
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener,
-    LocationListener {
+        LocationListener{
 
     private GoogleMap mMap;
 
