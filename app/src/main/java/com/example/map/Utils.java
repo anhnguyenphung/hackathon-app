@@ -12,8 +12,10 @@ import android.os.Build;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -42,7 +44,7 @@ public class Utils
    * Also checks if Google API client has access fine location permission.
    * Returns GoogleApiClient.
   */
-  public static GoogleApiClient intializeMaps(MapsActivity a)
+  public static GoogleApiClient initializeMaps(MapsActivity a)
   {
     GoogleApiClient retval;
     // Set maptype
@@ -146,16 +148,26 @@ public class Utils
     return retval;
   }
   
-  public static boolean pollLocationUpdate(MapsActivity a, int fastestIntervalSecs, int intervalSecs)
+  public static boolean pollLocationUpdate(final MapsActivity a, int fastestIntervalSecs, int intervalSecs)
   {
     a.locationRequest = new LocationRequest();
     a.locationRequest.setInterval(1000);
     a.locationRequest.setFastestInterval(1000);
     a.locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-    if (ContextCompat.checkSelfPermission(this,
+    if (ContextCompat.checkSelfPermission(a,
             Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
-      LocationServices.FusedLocationApi.requestLocationUpdates(a.gApiClient, a.locationRequest, a);
+      a.fusedLocationProviderClient.getLastLocation()
+              .addOnSuccessListener(a, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                  // Got last known location. In some rare situations, this can be null.
+                  if (location != null) {
+                    // Logic to handle location object
+                    a.onLocationChanged(location);
+                  }
+                }
+              });
       return true;
     }
     return false;

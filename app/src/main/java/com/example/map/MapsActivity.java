@@ -7,11 +7,15 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import androidx.annotation.NonNull;
@@ -23,13 +27,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     // Only update location marker per 500 meters
-    public static final float UPDATE_DISTANCE = 500.0;
+    public static final float UPDATE_DISTANCE = 500.0f;
     public static final int ZOOM_LEVEL = 17;
             
     public GoogleMap mMap;
-    private GoogleApiClient gApiClient;
+    public LocationRequest locationRequest;
+    public GoogleApiClient gApiClient;
+    public FusedLocationProviderClient fusedLocationProviderClient;
     private Marker lastMarker;
-    private LocationRequest locationRequest;
     private Location lastLoc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("MapsActivity.onCreate", "Google Play Services not available!");
             finish();
         }
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -69,7 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("MapsActivity.onLocationChanged", "called");
+        Log.d("onLocationChanged", "called");
         // Update loction marker when reached threshold
         if(lastLoc == null || lastLoc.distanceTo(location) >= UPDATE_DISTANCE)
         {
@@ -107,7 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         // When device is connected, attempt to do location updates.
-        Utils.pollLocationUpdate(a, 1000, 1000);
+        Utils.pollLocationUpdate(this, 1000, 1000);
     }
 
     @Override
