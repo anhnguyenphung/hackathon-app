@@ -114,6 +114,19 @@ public class Utils
         }
         return true;
   }
+  /*
+   * Returns double array of length 2, represents
+   * longitude and latitude respectively.
+   * 
+   * Params:
+   * location: can be gotten by overriding onLocationChanged from LocationListener interface
+   */
+  public static double[] getLatLng(Location location)
+  {
+    double[] retval = new double[] { location.getLatitude(), location.getLongitude() };
+    return retval;
+  }
+  
   
   
 }
