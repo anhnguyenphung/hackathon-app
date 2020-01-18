@@ -22,7 +22,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private GoogleMap mMap;
+    public GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
