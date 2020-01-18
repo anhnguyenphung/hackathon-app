@@ -8,36 +8,23 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import static com.google.android.gms.common.api.GoogleApiClient.Builder;
 
 
 public class Utils
 {
   public static final int LOCATION_PERM_REQ = 1;
-  
+
   private static String cachedApiStr;
   // Returns the Api key.
   public static String getApiKey()
@@ -69,6 +56,8 @@ public class Utils
                 // Reveals my location
                 a.mMap.setMyLocationEnabled(true);
        }
+      a.finish();
+      return null;
     }
     else {
             retval = buildGoogleApiClient(a);
@@ -79,7 +68,7 @@ public class Utils
   }
   private static synchronized GoogleApiClient buildGoogleApiClient(MapsActivity a)
   {
-    GoogleApiClient retval = new GoogleApiClient.Builder(a)
+    GoogleApiClient retval = new Builder(a)
       .addConnectionCallbacks(a)
       .addOnConnectionFailedListener(a)
       .addApi(LocationServices.API)

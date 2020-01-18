@@ -22,12 +22,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-            
     // Only update location marker per 500 meters
     public static final float UPDATE_DISTANCE = 500.0;
     public static final int ZOOM_LEVEL = 17;
             
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private GoogleApiClient gApiClient;
     private Marker lastMarker;
     private LocationRequest locationRequest;
@@ -120,4 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
 }
+
+
+
