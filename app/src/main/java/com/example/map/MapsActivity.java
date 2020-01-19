@@ -50,9 +50,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LocationCallback locationCallback;
 
     private Marker lastMarker;
-    public static Location lastUpdateLocation;
+    public Location lastUpdateLocation;
     private boolean findNearbyRequested;
-    public static List<Place> lastNearbyPlaces;
+    public List<Place> lastNearbyPlaces;
 
     // Markers that are being displaced on mMap that shows locations of lastNearbyPlaces.
     private List<Marker> nearbyMarkers;
@@ -144,16 +144,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 List<Place> newNearbyPlaces = Utils.getNearbyPlaces(location, NEARBY_DISTANCE_RADIUS);
                 Log.w("onLocationChanged", "API Called");
                 Log.d("onLocationChanged", "Nearby places: ");
-                for(Place nearbyPlace:lastNearbyPlaces)
-                {
-                    Log.d("onLocationChanged", nearbyPlace.toString());
+                // TODO: Do something with newNearbyPlaces here and attempt to reserve last known data
+                lastNearbyPlaces = newNearbyPlaces;
+                try {
+                    for (Place nearbyPlace : lastNearbyPlaces) {
+                        Log.d("onLocationChanged", nearbyPlace.toString());
+                    }
+                    nearbyMarkers = new ArrayList<Marker>();
+                    for (Place place : lastNearbyPlaces) {
+                        nearbyMarkers.add(PlacesUtils.markPlace(place, mMap));
+                    }
+                    findNearbyRequested = false;
                 }
-                nearbyMarkers = new ArrayList<Marker>();
-                for(Place place: lastNearbyPlaces)
-                {
-                    nearbyMarkers.add(PlacesUtils.markPlace(place, mMap));
-                }
-                findNearbyRequested = false;
+                catch(Exception e){}
 
             }
         }
