@@ -1,5 +1,7 @@
 package com.example.map;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -61,23 +64,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Log.d("MapActivity.onCreate", "onCreate done.");
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Log.d("onMapReady", "Initializing map");
         gApiClient = Utils.initializeMaps(this);
         // Add a marker in Sydney, Australia, and move the camera.
 //         LatLng sydney = new LatLng(-34, 151);
 //         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
 
     @Override
     public void onLocationChanged(Location location) {
         Log.d("onLocationChanged", "called");
         // Update loction marker when reached threshold
-        if(lastLoc == null || lastLoc.distanceTo(location) >= UPDATE_DISTANCE)
+        if(//lastLoc == null || lastLoc.distanceTo(location) >= UPDATE_DISTANCE
+        true)
         {
             // Remove last marker.
             if(lastMarker != null)
@@ -113,7 +120,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         // When device is connected, attempt to do location updates.
-        Utils.pollLocationUpdate(this, 1000, 1000);
+        Log.d("onConnected", "called");
+        Utils.pollLocationUpdate(this, 100, 1000);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int rCode, String perms[], int[] grantResults)
+    {
+        switch(rCode)
+        {
+            case Utils.LOCATION_PERM_REQ:
+            {
+                // If a request of location perm was granted
+                if(grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    // Make extra sure
+                    if(ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED)
+                    {
+                        if(gApiClient == null)
+                        {
+                            Utils.buildGoogleApiClient(this);
+                        }
+                        mMap.setMyLocationEnabled(true);
+                    }
+                }
+                else
+                {
+                    Log.e("onPermResults", "Location perm is denied");
+                }
+            }
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -46,9 +47,9 @@ public class Utils
   */
   public static GoogleApiClient initializeMaps(MapsActivity a)
   {
-    GoogleApiClient retval;
+    GoogleApiClient retval = null;
     // Set maptype
-    a.mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+    a.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     // Ask for access of location from google play services
     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(a,
@@ -58,8 +59,10 @@ public class Utils
                 // Reveals my location
                 a.mMap.setMyLocationEnabled(true);
        }
-      a.finish();
-      return null;
+      else
+      {
+        a.finish();
+      }
     }
     else {
             retval = buildGoogleApiClient(a);
@@ -68,7 +71,7 @@ public class Utils
     }
     return retval;
   }
-  private static synchronized GoogleApiClient buildGoogleApiClient(MapsActivity a)
+  public static synchronized GoogleApiClient buildGoogleApiClient(MapsActivity a)
   {
     GoogleApiClient retval = new Builder(a)
       .addConnectionCallbacks(a)
@@ -164,7 +167,15 @@ public class Utils
                   // Got last known location. In some rare situations, this can be null.
                   if (location != null) {
                     // Logic to handle location object
+
                     a.onLocationChanged(location);
+                  }
+                  else
+                  {
+                    Log.w("pollLocationUpdate","Location is null.");
+                    ActivityCompat.requestPermissions(a,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            LOCATION_PERM_REQ);
                   }
                 }
               });
