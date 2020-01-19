@@ -28,41 +28,7 @@ public class PlacesUtils {
 
     public static String retrieveRawString(String urlStr) throws IOException
     {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(urlStr);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            data = sb.toString();
-            Log.d("downloadUrl", data.toString());
-            br.close();
-
-        } catch (Exception e) {
-            Log.d("Exception", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
+        return Utils.retrieveRawString(urlStr);
     }
 
 //    public static void ShowNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
