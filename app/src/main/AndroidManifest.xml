@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD
     package="com.example.hung.myrezt">
+=======
+    package="com.example.hung.test4">
+>>>>>>> fc29fd28a864d8dd7659a5c43416d68c574a5369
 
     <application
         android:allowBackup="true"
@@ -9,15 +13,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity android:name=".LoadingActivity">
+=======
+        <activity android:name=".MainActivity">
+>>>>>>> fc29fd28a864d8dd7659a5c43416d68c574a5369
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".HomeActivity" />
         <activity android:name=".ListActivity"></activity>
+=======
+        <activity android:name=".Main2Activity"></activity>
+>>>>>>> fc29fd28a864d8dd7659a5c43416d68c574a5369
     </application>
 
 </manifest>

@@ -3,7 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
+<<<<<<< HEAD
         applicationId "com.example.hung.myrezt"
+=======
+        applicationId "com.example.hung.test4"
+>>>>>>> fc29fd28a864d8dd7659a5c43416d68c574a5369
         minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
@@ -25,5 +29,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+<<<<<<< HEAD
     implementation 'com.android.support:design:28.0.0'
+=======
+>>>>>>> fc29fd28a864d8dd7659a5c43416d68c574a5369
 }

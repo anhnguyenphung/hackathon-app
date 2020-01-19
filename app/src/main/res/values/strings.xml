@@ -1,4 +1,8 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">MyRezt</string>
     <string name="_4_7">4.7</string>
+=======
+    <string name="app_name">test4</string>
+>>>>>>> fc29fd28a864d8dd7659a5c43416d68c574a5369
 </resources>
