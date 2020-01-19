@@ -50,12 +50,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LocationCallback locationCallback;
 
     private Marker lastMarker;
-    private Location lastUpdateLocation;
+    public static Location lastUpdateLocation;
     private boolean findNearbyRequested;
-    public List<Place> lastNearbyPlaces;
+    public static List<Place> lastNearbyPlaces;
 
     // Markers that are being displaced on mMap that shows locations of lastNearbyPlaces.
     private List<Marker> nearbyMarkers;
+
+    public static int targetIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

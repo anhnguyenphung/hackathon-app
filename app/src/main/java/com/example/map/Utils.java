@@ -354,4 +354,9 @@ public class Utils
     }
     return data;
   }
+  public static double round(double v, int precision)
+  {
+    int s = (int) Math.pow(10,precision);
+    return (double) Math.round(v * s) / s;
+  }
 }
