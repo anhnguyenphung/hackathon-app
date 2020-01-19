@@ -127,6 +127,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             {
                 nearbyMarkers.add(PlacesUtils.markPlace(place, mMap));
             }
+            findNearbyRequested = false;
         }
         // Update loction marker when reached threshold
         if(//lastLoc == null || lastLoc.distanceTo(location) >= UPDATE_DISTANCE
