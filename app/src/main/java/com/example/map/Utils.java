@@ -13,12 +13,15 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -164,6 +167,47 @@ public class Utils
     Log.d("pollLocationUpdate", "poll started");
     a.locationRequest = LocationRequest.create();
     a.locationRequest.setInterval(1000);
+// <<<<<<< Pegasust
+//     a.locationRequest.setFastestInterval(1000);
+//     a.locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+//     // See if user enabled GPS
+//     LocationSettingsRequest.Builder rBuilder = new LocationSettingsRequest.Builder()
+//             .addLocationRequest(a.locationRequest);
+//     // Check state of GPS
+//     Task<LocationSettingsResponse> result =
+//             LocationServices.getSettingsClient(a).checkLocationSettings(rBuilder.build());
+
+//     result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+//       @Override
+//       public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+//         try {
+//           LocationSettingsResponse response = task.getResult(ApiException.class);
+//           // All location settings are satisfied. The client can initialize location
+//           // requests here.
+//         } catch (ApiException exception) {
+//           switch (exception.getStatusCode()) {
+//             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+//               // Location settings are not satisfied. But could be fixed by showing the
+//               // user a dialog.
+//               try {
+//                 // Cast to a resolvable exception.
+//                 ResolvableApiException resolvable = (ResolvableApiException) exception;
+//                 // Show the dialog by calling startResolutionForResult(),
+//                 // and check the result in onActivityResult().
+//                 resolvable.startResolutionForResult(
+//                         a,
+//                         LocationRequest.PRIORITY_HIGH_ACCURACY);
+//               } catch (IntentSender.SendIntentException e) {
+//                 // Ignore the error.
+//               } catch (ClassCastException e) {
+//                 // Ignore, should be an impossible error.
+//               }
+//               break;
+//             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+//               // Location settings are not satisfied. However, we have no way to fix the
+//               // settings so we won't show the dialog.
+//               break;
+// =======
     a.locationRequest.setFastestInterval(500);
     a.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -194,10 +238,25 @@ public class Utils
                     REQUEST_CHECK_SETTINGS);
           } catch (IntentSender.SendIntentException sendEx) {
             // Ignore the error.
+// >>>>>>> master
           }
         }
       }
     });
+// <<<<<<< Pegasust
+//     // See if we have the permission
+//     if (ContextCompat.checkSelfPermission(a,
+//             Manifest.permission.ACCESS_FINE_LOCATION)
+//             == PackageManager.PERMISSION_GRANTED) {
+//       a.fusedLocationProviderClient.getLastLocation()
+//               .addOnSuccessListener(a, new OnSuccessListener<Location>() {
+//                 @Override
+//                 public void onSuccess(Location location) {
+//                   // Got last known location. In some rare situations, this can be null.
+//                   if (location != null) {
+//                     // Logic to handle location object
+// =======
+// >>>>>>> master
 
   }
 }
