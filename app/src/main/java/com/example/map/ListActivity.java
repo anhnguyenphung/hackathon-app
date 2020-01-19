@@ -36,7 +36,7 @@ public class ListActivity extends AppCompatActivity {
         mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ListActivity.this, MapsActivity.class);
+                Intent intent = new Intent(ListActivity.this, RatingActivity.class);
                 startActivity(intent);
                 //When click on the list
                 //To-do
