@@ -13,15 +13,12 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,8 +26,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -253,7 +250,21 @@ public class Utils
         // location requests here.
         // ...
         Log.i("pullLocationUpdate", "Called onSuccess");
-        //a.fusedLocationProviderClient.getLastLocation()
+        a.fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(a, new OnSuccessListener<Location>()
+                {
+                  @Override
+                  public void onSuccess(Location location) {
+                    if(location != null)
+                    {
+                      // a.onLocationChanged(location);
+                      a.fusedLocationProviderClient.requestLocationUpdates(
+                              a.locationRequest,
+                              
+                      )
+                    }
+                  }
+                });
       }
     });
 

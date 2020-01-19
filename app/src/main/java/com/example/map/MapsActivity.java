@@ -19,7 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         Log.d("onLocationChanged", "called");
+        Log.d("onLocationChanged", "location: " + location.toString());
         if(location != null &&
                 findNearbyRequested &&
                 (location.hasAccuracy() && location.getAccuracy() <= TARGET_ACCURACY_RADIUS) || !location.hasAccuracy())
