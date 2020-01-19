@@ -69,7 +69,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng az = new LatLng(32.229806,-110.955023);
+//mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(az));
+        //cameraTo(new double[]{32.229806,-110.955023});
         Log.d("onMapReady", "Initializing map");
         gApiClient = Utils.initializeMaps(this);
         // Add a marker in Sydney, Australia, and move the camera.
@@ -92,14 +99,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastMarker.remove();
             }
             double[] latlng = Utils.getLatLng(location);
-            LatLng currLatLng = new LatLng(latlng[0], latlng[1]);
-            MarkerOptions markerOptions = new MarkerOptions()
-                .position(currLatLng)
-                .title("Current Location");
-            lastMarker = mMap.addMarker(markerOptions);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
+            cameraTo(latlng);
         }
+    }
+
+    private void cameraTo(double[] latlng) {
+        LatLng currLatLng = new LatLng(latlng[0], latlng[1]);
+        MarkerOptions markerOptions = new MarkerOptions()
+            .position(currLatLng)
+            .title("Current Location");
+        lastMarker = mMap.addMarker(markerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
     }
 
     @Override
@@ -155,6 +166,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+
 
     @Override
     public void onConnectionSuspended(int i) {
