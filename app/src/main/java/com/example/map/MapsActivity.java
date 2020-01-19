@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,7 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int ZOOM_LEVEL = 17;
     // Only find nearby places when the accuracy radius is within 500 meters
     public static final float TARGET_ACCURACY_RADIUS = 500.0F;
-    public static final int NEARBY_DISTANCE_RADIUS = 500;
+    public static final int NEARBY_DISTANCE_RADIUS = 2000;
             
     public GoogleMap mMap;
     public LocationRequest locationRequest;
@@ -136,6 +137,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("onLocationChanged", "Getting nearby places");
             // Get nearby places.
             lastNearbyPlaces = Utils.getNearbyPlaces(location, NEARBY_DISTANCE_RADIUS);
+            Log.w("onLocationChanged", "API Called");
+            Log.d("onLocationChanged", "Nearby places: ");
+            for(Place nearbyPlace:lastNearbyPlaces)
+            {
+                Log.d("onLocationChanged", nearbyPlace.toString());
+            }
             nearbyMarkers = new ArrayList<Marker>();
             for(Place place: lastNearbyPlaces)
             {
@@ -153,13 +160,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastMarker.remove();
             }
             double[] latlng = Utils.getLatLng(location);
+            Log.d("onLocationCreated","Putting mark in current location");
             // Mark the current location
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(new LatLng(latlng[0], latlng[1]))
-                    .title("Current Location");
+                    .title("Current Location")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             lastMarker = mMap.addMarker(markerOptions);
             // move camera to current location
-            cameraTo(latlng);
+            //cameraTo(latlng);
         }
     }
 

@@ -149,7 +149,7 @@ public class Utils
     return addQueries("https://maps.googleapis.com/maps/api/place/nearbysearch/json",
                "key=" + getApiKey(),
                       "location=" + lat + "," + lng,
-                      "radius=" + meterRadius,
+                      //"radius=" + meterRadius,
                       "sensor=true",
                       "rankby=distance");
                       
@@ -174,10 +174,12 @@ public class Utils
     List<Place> retval = null;
     String requestUrl = getUrl(userLocation.getLatitude(), userLocation.getLongitude(),
             searchRadiusMeters);
+    Log.d("getNearbyPlaces", "url: " + requestUrl);
     PlacesUtils.GetNearbyPlacesData getNearbyPlacesFunc = new PlacesUtils.GetNearbyPlacesData();
     try
     {
       String rawJson = getNearbyPlacesFunc.execute(new Object[]{requestUrl}).get();
+      Log.d("getNearbyPlaces", "json: " + rawJson);
       retval = new ArrayList<Place>();
       List<HashMap<String, String>> nearbyPlacesList = DataParser.parse(rawJson);
       for(HashMap<String, String> nearbyPlaceData: nearbyPlacesList)
@@ -187,7 +189,7 @@ public class Utils
     }
     catch (Exception e)
     {
-      Log.w("getNearbyPlaces", e.getStackTrace().toString());
+      Log.w("getNearbyPlaces.Exception", e.getStackTrace().toString());
     }
     return retval;
   }

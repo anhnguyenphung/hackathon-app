@@ -27,6 +27,10 @@ public class Place {
         retval/=(double) meanRatings.size();
         return retval;
     }
+    public String toString()
+    {
+        return "{" + String.join(", ", name, vicinity, String.valueOf(latlng[0]), String.valueOf(latlng[1]));
+    }
     public float distanceFromUser(double[] userLatLng)
     {
         float[] result = new float[1];
