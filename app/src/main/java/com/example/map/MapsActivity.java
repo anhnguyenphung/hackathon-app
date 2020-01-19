@@ -19,6 +19,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +36,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Only update location marker per 500 meters
     public static final float UPDATE_DISTANCE = 500.0f;
     public static final int ZOOM_LEVEL = 17;
+    // Only find nearby places when the accuracy radius is within 500 meters
+    public static final float TARGET_ACCURACY_RADIUS = 500.0F;
+    public static final int NEARBY_DISTANCE_RADIUS = 500;
             
     public GoogleMap mMap;
     public LocationRequest locationRequest;
@@ -39,6 +46,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public FusedLocationProviderClient fusedLocationProviderClient;
     private Marker lastMarker;
     private Location lastLoc;
+    private boolean findNearbyRequested;
+    public List<Place> lastNearbyPlaces;
+
+    // Markers that are being displaced on mMap that shows locations of lastNearbyPlaces.
+    private List<Marker> nearbyMarkers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +78,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Log.d("MapActivity.onCreate", "onCreate done.");
+        findNearbyRequested = true;
     }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -86,9 +99,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /*
+     * Remove markers from map
+     * then set findNearbyRequested to true.
+     */
+    public void promptNearbyRequest()
+    {
+        findNearbyRequested = true;
+        for(Marker marker: nearbyMarkers)
+        {
+            // Remove marker from list
+            marker.remove();
+        }
+    }
     @Override
     public void onLocationChanged(Location location) {
         Log.d("onLocationChanged", "called");
+        if(location != null &&
+                findNearbyRequested &&
+                (location.hasAccuracy() && location.getAccuracy() <= TARGET_ACCURACY_RADIUS) || !location.hasAccuracy())
+        {
+            Log.i("onLocationChanged", "Getting nearby places");
+            // Get nearby places.
+            lastNearbyPlaces = Utils.getNearbyPlaces(location, NEARBY_DISTANCE_RADIUS);
+            nearbyMarkers = new ArrayList<Marker>();
+            for(Place place: lastNearbyPlaces)
+            {
+                nearbyMarkers.add(PlacesUtils.markPlace(place, mMap));
+            }
+        }
         // Update loction marker when reached threshold
         if(//lastLoc == null || lastLoc.distanceTo(location) >= UPDATE_DISTANCE
         true)
@@ -99,16 +138,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastMarker.remove();
             }
             double[] latlng = Utils.getLatLng(location);
+            // Mark the current location
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(new LatLng(latlng[0], latlng[1]))
+                    .title("Current Location");
+            lastMarker = mMap.addMarker(markerOptions);
+            // move camera to current location
             cameraTo(latlng);
         }
     }
 
     private void cameraTo(double[] latlng) {
         LatLng currLatLng = new LatLng(latlng[0], latlng[1]);
-        MarkerOptions markerOptions = new MarkerOptions()
-            .position(currLatLng)
-            .title("Current Location");
-        lastMarker = mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));
     }

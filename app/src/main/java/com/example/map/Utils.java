@@ -28,6 +28,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -145,9 +149,11 @@ public class Utils
   public static String getUrl(double lat, double lng, int meterRadius)
   {
     return addQueries("https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+               "key=" + getApiKey(),
                       "location=" + lat + "," + lng,
                       "radius=" + meterRadius,
-                      "sensor=true");
+                      "sensor=true",
+                      "rankby=distance");
                       
   }
   
@@ -161,12 +167,38 @@ public class Utils
     }
     return retval;
   }
+
+  /*
+   * Returns null if unable to retrieve nearby places.
+   */
+  public static List<Place> getNearbyPlaces(Location userLocation, int searchRadiusMeters)
+  {
+    List<Place> retval = null;
+    String requestUrl = getUrl(userLocation.getLatitude(), userLocation.getLongitude(),
+            searchRadiusMeters);
+    PlacesUtils.GetNearbyPlacesData getNearbyPlacesFunc = new PlacesUtils.GetNearbyPlacesData();
+    try
+    {
+      String rawJson = getNearbyPlacesFunc.execute(new Object[]{requestUrl}).get();
+      retval = new ArrayList<Place>();
+      List<HashMap<String, String>> nearbyPlacesList = DataParser.parse(rawJson);
+      for(HashMap<String, String> nearbyPlaceData: nearbyPlacesList)
+      {
+        retval.add(Place.getFromData(nearbyPlaceData));
+      }
+    }
+    catch (Exception e)
+    {
+      Log.w("getNearbyPlaces", e.getStackTrace().toString());
+    }
+    return retval;
+  }
   
   public static void pollLocationUpdate(final MapsActivity a, int fastestIntervalSecs, int intervalSecs)
   {
     Log.d("pollLocationUpdate", "poll started");
     a.locationRequest = LocationRequest.create();
-    a.locationRequest.setInterval(1000);
+    a.locationRequest.setInterval(intervalSecs);
 // <<<<<<< Pegasust
 //     a.locationRequest.setFastestInterval(1000);
 //     a.locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -208,7 +240,7 @@ public class Utils
 //               // settings so we won't show the dialog.
 //               break;
 // =======
-    a.locationRequest.setFastestInterval(500);
+    a.locationRequest.setFastestInterval(fastestIntervalSecs);
     a.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
             .addLocationRequest(a.locationRequest);
