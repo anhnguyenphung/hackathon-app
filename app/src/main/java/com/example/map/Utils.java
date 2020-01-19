@@ -9,6 +9,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -259,9 +260,7 @@ public class Utils
                     {
                       // a.onLocationChanged(location);
                       a.fusedLocationProviderClient.requestLocationUpdates(
-                              a.locationRequest,
-                              
-                      )
+                              a.locationRequest, a.locationCallback, Looper.getMainLooper());
                     }
                   }
                 });

@@ -10,7 +10,9 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +45,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LocationRequest locationRequest;
     public GoogleApiClient gApiClient;
     public FusedLocationProviderClient fusedLocationProviderClient;
+    public LocationCallback locationCallback;
+
     private Marker lastMarker;
     private Location lastLoc;
     private boolean findNearbyRequested;
@@ -72,6 +76,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             finish();
         }
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null || locationResult.getLastLocation() == null) {
+                    return;
+                }
+                onLocationChanged(locationResult.getLastLocation());
+            };
+        };
+
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
