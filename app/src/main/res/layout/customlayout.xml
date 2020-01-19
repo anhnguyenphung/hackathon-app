@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    //image
+
+    //name
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="170dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="42dp"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="145dp"
+        android:layout_height="49dp"
+        android:layout_alignTop="@+id/imageView3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:text="Name"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+    //distance
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="161dp"
+        android:layout_height="31dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginTop="69dp"
+        android:text="Distance"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+    //rate
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView3"
+        android:layout_alignStart="@+id/textView2"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:text="Rate"
+        android:drawableStart="@drawable/ic_star_black_24dp"/>
+</RelativeLayout>
