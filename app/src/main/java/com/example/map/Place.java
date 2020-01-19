@@ -12,7 +12,29 @@ public class Place {
     double[] latlng;
     List<Double> meanRatings;
     List<Review> reviews;
-
+    /*
+     * See https://docs.google.com/spreadsheets/d/1kW0grOGKZgpqgICPzMgds8cNXQPkT-bVkFs1oQZNMRA/edit?usp=sharing
+     * for how numbers are derived.
+     */
+    @Override
+    public int hashCode()
+    {
+        int a = (int) (latlng[0]*4448.0);
+        int b = (int) (latlng[1]*4448.0);
+        return (a << 11) + (b << 9);
+    }
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) return true;
+        if(o == null) return false;
+        if(this.getClass() != o.getClass()) return false;
+        Place other = (Place) o;
+        return other.latlng[0] == this.latlng[0] &&
+                other.latlng[1] == this.latlng[1] &&
+                other.vicinity.equals(this.vicinity) &&
+                other.name.equals(this.name);
+    }
     public List<Double> getMeanRatings()
     {
         return meanRatings;

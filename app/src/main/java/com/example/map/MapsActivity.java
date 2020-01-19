@@ -35,12 +35,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-    // Only update location marker per 500 meters
+    // Only update location markers per 500 meters
     public static final float UPDATE_DISTANCE = 500.0f;
     public static final int ZOOM_LEVEL = 17;
     // Only find nearby places when the accuracy radius is within 500 meters
     public static final float TARGET_ACCURACY_RADIUS = 500.0F;
     public static final int NEARBY_DISTANCE_RADIUS = 2000;
+
             
     public GoogleMap mMap;
     public LocationRequest locationRequest;
@@ -49,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LocationCallback locationCallback;
 
     private Marker lastMarker;
-    private Location lastLoc;
+    private Location lastUpdateLocation;
     private boolean findNearbyRequested;
     public List<Place> lastNearbyPlaces;
 
@@ -134,21 +135,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 findNearbyRequested &&
                 (location.hasAccuracy() && location.getAccuracy() <= TARGET_ACCURACY_RADIUS) || !location.hasAccuracy())
         {
-            Log.i("onLocationChanged", "Getting nearby places");
-            // Get nearby places.
-            lastNearbyPlaces = Utils.getNearbyPlaces(location, NEARBY_DISTANCE_RADIUS);
-            Log.w("onLocationChanged", "API Called");
-            Log.d("onLocationChanged", "Nearby places: ");
-            for(Place nearbyPlace:lastNearbyPlaces)
+            if(lastUpdateLocation == null || location.distanceTo(lastUpdateLocation) >= UPDATE_DISTANCE)
             {
-                Log.d("onLocationChanged", nearbyPlace.toString());
+                Log.i("onLocationChanged", "Getting nearby places");
+                // Get nearby places.
+                List<Place> newNearbyPlaces = Utils.getNearbyPlaces(location, NEARBY_DISTANCE_RADIUS);
+                Log.w("onLocationChanged", "API Called");
+                Log.d("onLocationChanged", "Nearby places: ");
+                for(Place nearbyPlace:lastNearbyPlaces)
+                {
+                    Log.d("onLocationChanged", nearbyPlace.toString());
+                }
+                nearbyMarkers = new ArrayList<Marker>();
+                for(Place place: lastNearbyPlaces)
+                {
+                    nearbyMarkers.add(PlacesUtils.markPlace(place, mMap));
+                }
+                findNearbyRequested = false;
+
             }
-            nearbyMarkers = new ArrayList<Marker>();
-            for(Place place: lastNearbyPlaces)
-            {
-                nearbyMarkers.add(PlacesUtils.markPlace(place, mMap));
-            }
-            findNearbyRequested = false;
         }
         // Update loction marker when reached threshold
         if(//lastLoc == null || lastLoc.distanceTo(location) >= UPDATE_DISTANCE
