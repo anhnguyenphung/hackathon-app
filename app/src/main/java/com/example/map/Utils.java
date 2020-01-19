@@ -252,6 +252,8 @@ public class Utils
         // All location settings are satisfied. The client can initialize
         // location requests here.
         // ...
+        Log.i("pullLocationUpdate", "Called onSuccess");
+        //a.fusedLocationProviderClient.getLastLocation()
       }
     });
 
@@ -287,6 +289,11 @@ public class Utils
 //                   // Got last known location. In some rare situations, this can be null.
 //                   if (location != null) {
 //                     // Logic to handle location object
+//
+//                   }
+//                 }
+//               });
+//     }
 // =======
 // >>>>>>> master
 
