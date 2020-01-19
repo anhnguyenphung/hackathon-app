@@ -25,14 +25,12 @@ So imagine that you were in a new place and you wanted to find a restroom, can G
 
 ## Technologies
 
-Java, Python, Git/Github, Google APIs, Adobe XD.
+Java, Python, Git/Github, Google APIs, Adobe XD, Android Studio.
 
 ## Setup
 
-To run this project, install it locally using npm:
+To run this project, clone it with git:
 
 ```
-$ cd ../lorem
-$ npm install
-$ npm start
+$ git clone https://github.com/anhnguyenphung/hackathon-app.git
 ```
